@@ -1,0 +1,22 @@
+---
+- hosts: machine1
+  remote_user: vagrant
+  sudo: true
+
+  vars:
+  - version: 1.1
+
+  vars_files:
+  - ./vars/software_versions.yml
+  - ./vars/local_virtual_box.yml
+
+  tasks:
+  - include:
+  - name: Install Git & Node
+    apt: name={{ item }} state=present
+    with_items:
+      - git
+      - npm
+
+  - name: Checkout git Code
+    git: repo=ssh://git@github.com:LabShare/hedwig-ui.git dest=/opt/hedwig-ui
