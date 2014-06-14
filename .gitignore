@@ -1,2 +1,7 @@
 .vagrant
-.idea
+
+
+# Intellij
+.idea/
+*.iml
+*.iws
