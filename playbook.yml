@@ -11,12 +11,19 @@
   - ./vars/local_virtual_box.yml
 
   tasks:
-  - include:
-  - name: Install Git & Node
+
+  - name: Install basic packages
     apt: name={{ item }} state=present
     with_items:
       - git
       - npm
+      - curl
 
-  - name: Checkout git Code
-    git: repo=ssh://git@github.com:LabShare/hedwig-ui.git dest=/opt/hedwig-ui
+  - name: Restart Jenkins
+    sudo: yes
+    command: java -jar {{ jenkins.cli_dest }} -s http://{{ jenkins_host }}:8080 safe-restart
+
+
+  - include: ./tasks/python.yml
+  - include: ./tasks/java7.yml
+  - include: ./tasks/jenkins.yml
