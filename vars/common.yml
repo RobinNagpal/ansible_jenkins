@@ -1,4 +1,6 @@
 ---
+
+startup_delay_s: 60
 jenkins_dest: /opt/jenkins
 jenkins:
   deb:

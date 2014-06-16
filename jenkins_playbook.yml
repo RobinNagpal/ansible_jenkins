@@ -7,8 +7,11 @@
   - version: 1.1
 
   vars_files:
-  - ./vars/software_versions.yml
+  - ./vars/common.yml
   - ./vars/local_virtual_box.yml
+
+  handlers:
+  - include: ./handlers/jenkins.yml
 
   tasks:
 
@@ -16,14 +19,16 @@
     apt: name={{ item }} state=present
     with_items:
       - git
-      - npm
       - curl
+      - software-properties-common
 
-  - name: Restart Jenkins
-    sudo: yes
-    command: java -jar {{ jenkins.cli_dest }} -s http://{{ jenkins_host }}:8080 safe-restart
-
-
+  - include: ./tasks/nodejs.yml
   - include: ./tasks/python.yml
   - include: ./tasks/java7.yml
+  - include: ./tasks/ruby.yml
+
+  - name: Install Sass
+    command: gem install sass
+
+
   - include: ./tasks/jenkins.yml

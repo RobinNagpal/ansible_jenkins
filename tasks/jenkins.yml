@@ -12,14 +12,6 @@
   action: apt_repository repo='{{ jenkins.deb.repo }}' state=present
 
 
-####################### Install Jenkins dependencies ################
-- name: Install dependencies
-  sudo: yes
-  action: "{{ ansible_pkg_mgr }} pkg={{ item }} state=installed update-cache=yes"
-  with_items: jenkins.deb.dependencies
-
-
-
 #######################       Install Jenkins      ##################
 - name: Install Jenkins
   sudo: yes
@@ -37,8 +29,11 @@
 # Create Jenkins CLI destination directory
 - name: "Create Jenkins CLI destination directory: {{ jenkins_dest }}"
   sudo: yes
-  action: file path={{ jenkins_dest }} state=directory
+  action: file path={{ jenkins_dest }} state=directory mode=775
 
+# TODO: need to just give to the user who started jenkins
+- name: "Create workspace direcotry"
+  file: path={{ jenkins_dest }}/workspace state=directory  recurse=yes mode=775
 # Get Jenkins CLI from localhost
 - name: Get Jenkins CLI
   sudo: yes
